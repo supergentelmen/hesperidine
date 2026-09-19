@@ -238,7 +238,15 @@ function drying(all){const p=state.p;shadow(504,481,210,17);metal(315,130,378,34
  line([[370,371],[632,371]],'#809fa6',5);line([[370,376],[632,376]],'#d8e4e5',2);ellipse(498,348,105,20,'#edf1e4','#abbcae');ellipse(498,344,99,15,p<1?`rgba(185,159,80,${.12+.24*(1-p)})`:'#c9b27999');for(let i=0;i<75*p;i++)box(417+i*37%160,336+i*11%14,2.5,1.7,'#b6a061',null,1);all.filter(m=>m.location==='fraction').forEach(m=>dot(m,426+m.id*29%145,338+m.id%9));
  box(354,221,11,184,'#ffffff38',null,4);metal(665,267,13,89,4);box(351,440,134,18,'#365b61',null,3);text(p===1?'CYCLE TERMINÉ':'SÉCHAGE',419,453,10,'#cbe9d9');ellipse(642,448,5,5,state.running?'#58b995':'#a8bcba');
  line([[617,130],[617,91],[764,91]],'#a8bfc6',13);line([[617,130],[617,91],[764,91]],'#dce8eb',8);smallLabel('Évacuation des vapeurs',808,68);
- if(state.running&&p<1)for(let i=0;i<7;i++){const t=(state.clock*.3+i/7)%1;line([[430+i*24,326-t*75],[434+i*24,313-t*75]],'#f4faf544',2)}
+ // Cutaway exhaust connection makes the route from chamber to outlet explicit.
+ line([[617,222],[617,130]],'#8aaab5',13);line([[617,222],[617,130]],'#dce8eb',8);ellipse(617,222,13,5,'#7297a4','#bdd6dc');ellipse(766,91,4,7,'#5d8494','#abc5ce');
+ // Direction cues remain after drying; moving vapor stops when the sample is dry.
+ line([[611,177],[617,168],[623,177]],'#4186a0',2);line([[710,85],[719,91],[710,97]],'#4186a0',2);
+ if(p<1){const active=state.running||p>0;const phase=active?state.clock*.22:0;const strength=active?.85:.32;
+ for(let j=0;j<4;j++){const plume=[];for(let k=0;k<=24;k++){const t=k/24;plume.push([444+j*34+Math.sin(t*8-state.clock*2+j)*5+t*22,335-t*73])}ctx.save();ctx.globalAlpha=strength*.55;line(plume,'#8abccc',9);line(plume,'#effaff',3);ctx.restore()}
+ for(let i=0;i<15;i++){const t=(phase+i/15)%1;const startX=435+(i%5)*30;const route=[{x:startX,y:333},{x:startX+8,y:292},{x:570,y:249},{x:617,y:222},{x:617,y:130},{x:617,y:91},{x:764,y:91},{x:810,y:80},{x:847,y:55}];const a=alongPath(route,t),b=alongPath(route,Math.min(1,t+.025));ctx.save();ctx.globalAlpha=strength*Math.min(1,t*12,(1-t)*8);line([[a.x,a.y],[b.x,b.y]],'#5e9fb8',t>.85?5:3);line([[a.x-1,a.y-1],[b.x-1,b.y-1]],'#e8faff',1);if(t>.85){ellipse(a.x,a.y,8+(t-.85)*65,4+(t-.85)*28,'#9bc7d43d')}ctx.restore()}
+ }
+
  nameplate(p===1?'Fraction enrichie sèche':'Fraction concentrée','Même échantillon · disparition du solvant résiduel',505,516);smallLabel('Aspect du résidu ≠ mesure de pureté',181,255);
 }
 function hplc(all){const p=state.p;shadow(388,484,144,15);for(let i=0;i<4;i++){metal(267,161+i*75,240,69,8);box(280,174+i*75,131,39,'#e3edef',null,4);box(424,175+i*75,67,18,'#254b53',null,3);ellipse(483,206+i*75,3,3,state.running?'#62c3a5':'#93b3b5');text(['DÉGAZEUR / POMPE','INJECTEUR','COLONNE','DÉTECTEUR'][i],345,198+i*75,12,'#6a858e');for(let k=0;k<5;k++)line([[427,204+i*75+k*2],[462,204+i*75+k*2]],'#849fa75f',.7)}
